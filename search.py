@@ -90,8 +90,31 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
+    from game import Directions
+    from util import Stack
 
-    util.raiseNotDefined()
+    stack = Stack() #armazena tuplas (estado, lista de acoes: caminho do estado inicial ate ele)
+    visited = set() #armazena as coordenadas (estados) ja visitadas
+
+    startTuple = (problem.getStartState(), [])
+    stack.push(startTuple)
+
+    while not (stack.isEmpty()):
+        current = stack.pop()
+        if not problem.isGoalState(current[0]):
+            if not (current[0] in visited): #[0] na tupla eh o estado
+                visited.add(current[0])
+
+                successors = problem.getSuccessors(current[0])
+                for neighbor in successors:
+                    if not (neighbor[0] in visited): #(estado, acao, custo)
+                        listActions = current[1] + [neighbor[1]]
+                        t = (neighbor[0], listActions)
+                        stack.push(t)
+
+        else: #retorna lista de acoes
+            return current[1]
+    
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
