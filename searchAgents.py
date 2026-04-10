@@ -285,24 +285,17 @@ class CornersProblem(search.SearchProblem):
             if not startingGameState.hasFood(*corner):
                 print('Warning: no food in corner ' + str(corner))
         self._expanded = 0 # DO NOT CHANGE; Number of search nodes expanded
-        # Please add any code here which you would like to use
-        # in initializing the problem
-        "*** YOUR CODE HERE ***"
-
+        
     def getStartState(self):
         """
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return (self.startingPosition, (False, False, False, False)) # (posicao, (status dos cantos) -> Nao foram visitados)
 
+    #Goal state: todos os cantos foram visitados (True, True, True, True)
     def isGoalState(self, state):
-        """
-        Returns whether this search state is a goal state of the problem.
-        """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return all(state[1])
 
     def getSuccessors(self, state):
         """
@@ -317,15 +310,18 @@ class CornersProblem(search.SearchProblem):
 
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            # Add a successor state to the successor list if the action is legal
-            # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
-
-            "*** YOUR CODE HERE ***"
-
+            # state = (posicao, (status dos cantos))
+            x, y = state[0]
+            visitedCorners = list(state[1])  
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            if not self.walls[nextx][nexty]:
+                # verifica se o proximo estado é um canto, se for, marca como visitado
+                if (nextx, nexty) in self.corners:
+                    index = self.corners.index((nextx, nexty)) # retorna qual o indice do canto que foi visitado
+                    visitedCorners[index] = True
+                nextState = ((nextx, nexty), tuple(visitedCorners))
+                successors.append((nextState, action, 1))
         self._expanded += 1 # DO NOT CHANGE
         return successors
 
