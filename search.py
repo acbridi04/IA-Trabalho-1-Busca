@@ -146,8 +146,36 @@ def breadthFirstSearch(problem):
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from util import PriorityQueue
+
+    queue = PriorityQueue() # Usamos uma PriorityQueue para ordenar as ações com base no custo
+    visited = set()
+    
+    # Define as triplas como: (estado, ação,  custo)
+    start = (problem.getStartState(), [], 0)
+    queue.push(start, priority=0)
+    
+    while not (queue.isEmpty()):
+        current = queue.pop()
+        if not problem.isGoalState(current[0]):
+            # [0] na tupla é o estado
+            if not (current[0] in visited): 
+                visited.add(current[0])
+
+                successors = problem.getSuccessors(current[0])
+                for neighbor in successors:
+                    # Neighbor é tripla: (estado, ação, custo)
+                    if not (neighbor[0] in visited): 
+                        listActions = current[1] + [neighbor[1]]
+                        
+                        # Calcula o custo acumulado para esse vizinho
+                        totalCost = current[2] + neighbor[2] 
+                        
+                        t = (neighbor[0], listActions, totalCost)
+                        queue.push(t, priority=totalCost)
+
+        else:
+            return current[1]
 
 def nullHeuristic(state, problem=None):
     """
