@@ -186,8 +186,42 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from util import PriorityQueue
+
+    queue = PriorityQueue() 
+    visited = set()
+    
+    start = (problem.getStartState(), [], 0)
+    queue.push(start, priority=0)
+    
+    while not (queue.isEmpty()):
+        current = queue.pop()
+        if not problem.isGoalState(current[0]):
+            # [0] na tupla é o estado
+            if not (current[0] in visited): 
+                visited.add(current[0])
+
+                successors = problem.getSuccessors(current[0])
+                for neighbor in successors:
+                    # Neighbor é tripla: (estado, ação, custo)
+                    if not (neighbor[0] in visited): 
+                        listActions = current[1] + [neighbor[1]]
+                        
+                        # Calcula o custo acumulado para esse vizinho
+                        realCost = current[2] + neighbor[2]
+
+                        # Calcula a heurística para estado vizinho
+                        heuristicCost = heuristic(neighbor[0], problem)
+                        
+                        # Salva a nova tupla usando o custo real
+                        t = (neighbor[0], listActions, realCost)
+
+                        # Insere na pilha usando o custo real + heurística
+                        # f(n) = g(n) + h(n)
+                        queue.push(t, priority=realCost+heuristicCost)
+
+        else:
+            return current[1]
 
 
 # Abbreviations
