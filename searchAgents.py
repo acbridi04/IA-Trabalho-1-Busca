@@ -362,12 +362,11 @@ def cornersHeuristic(state, problem):
         if not visitationStatus[i]:
             unvisited_corners.append(corners[i])
             
-    if unvisited_corners.count == 0:
+    if not unvisited_corners:
         return 0
     
-    distances = []
-    for corner in unvisited_corners:
-        distances.append(util.manhattanDistance(position, corner))
+    distances = [util.manhattanDistance(position, corner) for corner in unvisited_corners]
+
 
     # Retorna a distância até o canto não visitado mais distante
     return max(distances)
