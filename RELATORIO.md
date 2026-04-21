@@ -73,6 +73,33 @@ O estado inicial é composto pela posição de partida e a tupla `(False, False,
 
 
 ## Heurísticas (admissibilidade + impacto) (Tarefas 6-7)
+### Tarefa 6 - Corners Heuristic:
+A heurística implementada para o problema dos cantos calcula a distância de Manhattan entre a posição atual do Pac-Man e cada um dos cantos ainda não visitados, retornando a maior dessas distâncias: $h(s) = \max(\{Manhattan(pos, c_i) \mid c_i \in C_{unvisited}\})$.
+
+Essa heurística é admissível porque, para atingir o estado objetivo, o Pac-Man precisa obrigatoriamente visitar todos os cantos restantes. Como ele só pode se mover uma casa por vez (movimentos ortogonais), o custo real para chegar ao canto mais distante será sempre maior ou igual à distância de Manhattan até ele, mesmo ignorando as paredes do labirinto. Portanto, a heurística nunca superestima o custo real para alcançar o objetivo, garantindo a admissibilidade.
+
+```bash
+# Comandos para analise do impacto da heurística:
+
+# Sem heurística:
+python3 pacman.py -l mediumCorners -p SearchAgent -a fn=aStarSearch,prob=CornersProblem,heuristic=nullHeuristic -z 0.5
+python3 pacman.py -l bigCorners -p SearchAgent -a fn=aStarSearch,prob=CornersProblem,heuristic=nullHeuristic -z 0.5
+
+# Com heurística:
+python3 pacman.py -l mediumCorners -p SearchAgent -a fn=aStarSearch,prob=CornersProblem,heuristic=cornersHeuristic -z 0.5
+python3 pacman.py -l bigCorners -p SearchAgent -a fn=aStarSearch,prob=CornersProblem,heuristic=cornersHeuristic -z 0.5
+```
+
+| Algoritmo | Labirinto | Custo da Solução | Nós Expandido |
+| - | - | - | - | 
+| A* Search (Sem Heurística) | mediumCorners | 106 | 1699 |
+| A* Search (Corners Heuristic) | mediumCorners | 106 | 1136 |
+| A* Search (Sem Heurística) | bigCorners | 162 | 7949 |
+| A* Search (Corners Heuristic) | bigCorners | 162 | 4380 |
+
+Os resultados evidenciam um impacto significativo da heurística na eficiência da busca. No labirinto `mediumCorners`, a utilização da heurística reduziu o número de nós expandidos de 1699 para 1136, representando uma diminuição de aproximadamente 33%. Já no `bigCorners`, a redução foi ainda mais expressiva, com os nós expandidos caindo de 7949 para apenas 4380, o que corresponde a uma redução de cerca de 45%. 
+
+### Tarefa 7 - Food Heuristic:
 > WIP
 
 ## Declaração do uso de IA
