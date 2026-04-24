@@ -366,7 +366,7 @@ def cornersHeuristic(state, problem):
         return 0
     
     distances = [util.manhattanDistance(position, corner) for corner in unvisited_corners]
-
+    
 
     # Retorna a distância até o canto não visitado mais distante
     return max(distances)
@@ -461,9 +461,30 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
-    position, foodGrid = state
+    pacman_position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    coins_position = foodGrid.asList() #lista coordenadas das moedas no mapa
+    
+    if not coins_position:
+        return 0
+    
+    #heuristica aplicada: distancia no mapa até a moeda mais distante (mazeDistance)
+    distances = []
+    for coin in coins_position:
+       #dicionario usado para guardar resultados de mazeDistance (resolucao muito lenta se nao usado)
+        dict_key = f"distance {pacman_position} to {coin}"
+
+        #faz o calculo apenas se nunca foi feito antes
+        if not dict_key in problem.heuristicInfo: 
+            dist = mazeDistance(pacman_position, coin, problem.startingGameState)
+            distances.append(dist)
+            problem.heuristicInfo[dict_key] = dist
+        else: 
+            pre_calc_dist = problem.heuristicInfo[dict_key]
+            distances.append(pre_calc_dist)
+        
+    return max(distances)
+    
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
