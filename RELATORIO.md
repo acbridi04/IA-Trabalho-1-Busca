@@ -15,7 +15,7 @@
 **Membros do grupo:**
 - Adriel de Souza (00579100)
 - Arthur Bridi (xx)
-- Rafael Stephanou (xx)
+- Rafael Stephanou (00590367)
 
 ## Comparação experimental (Tarefas 1-4):
 
@@ -69,7 +69,12 @@ A modelagem dos estados para o problema dos cantos foi definida como uma tupla c
 O estado inicial é composto pela posição de partida e a tupla `(False, False, False, False)`. O estado objetivo é alcançado quando todos os elementos da tupla de status são `True`, indicando que os quatro cantos foram visitados. Na função de sucessores, a cada movimento, verifica-se se a nova posição coincide com algum dos cantos; se sim, o booleano correspondente na tupla é atualizado para `True`.
 
 ### Food:
-> WIP
+A modelagem dos estados para o Food Problem é uma tupla contendo a posição atual do Pac-Man e uma matriz 2D de comida restante: ((x, y), foodGrid).
+
+- **Posição:** Uma tupla `(x, y)` com as coordenadas inteiras do Pac-Man.
+- **Grid de comida:** Um objeto Grid (matriz 2D) de valores booleanos onde True indica que ainda há comida naquela posição e False indica que já foi consumida.
+
+O estado inicial é composto pela posição de partida e o grid completo de comida (todos os pontos True). O estado objetivo é alcançado quando não há nenhum True restante no grid, ou seja, todas as comidas foram coletadas. Na função de sucessores, a cada movimento, verifica-se se a nova posição contém comida; se sim, o grid é copiado para o próximo estado e a posição correspondente é marcada como `False`.
 
 
 ## Heurísticas (admissibilidade + impacto) (Tarefas 6-7)
@@ -100,7 +105,29 @@ python3 pacman.py -l bigCorners -p SearchAgent -a fn=aStarSearch,prob=CornersPro
 Os resultados evidenciam um impacto significativo da heurística na eficiência da busca. No labirinto `mediumCorners`, a utilização da heurística reduziu o número de nós expandidos de 1699 para 1136, representando uma diminuição de aproximadamente 33%. Já no `bigCorners`, a redução foi ainda mais expressiva, com os nós expandidos caindo de 7949 para apenas 4380, o que corresponde a uma redução de cerca de 45%. 
 
 ### Tarefa 7 - Food Heuristic:
-> WIP
+A heurística implementada para o Food Problem calcula a distância real no labirinto (mazeDistance) entre a posição atual do Pac-Man e cada uma das comidas restantes, retornando a maior dessas distâncias: $h(s) = \max(\{mazeDistance(pos, f_i) \mid f_i \in F_{remaining}\})$
+
+
+A heurística é admissível porque o Pac-Man precisa obrigatoriamente visitar toda a comida, incluindo a mais distante. O custo real da solução nunca será menor que a distância até ela, independente do caminho tomado. Usar mazeDistance em vez de Manhattan torna a heurística mais precisa porque considera as paredes, reduzindo o número de nós expandidos pelo A*.
+
+```bash
+# Comandos para analise do impacto da heurística:
+
+# Sem heurística:
+python3 pacman.py -l trickySearch -p SearchAgent -a fn=aStarSearch,prob=FoodSearchProblem,heuristic=nullHeuristic -z 0.5
+
+# Com heurística:
+python3 pacman.py -l trickySearch -p SearchAgent -a fn=aStarSearch,prob=FoodSearchProblem,heuristic=foodHeuristic -z 0.5
+```
+
+
+| Algoritmo | Custo da Solução | Nós Expandido |
+| - | - | - | 
+| A* Search (Sem Heurística) | 60 | 16688 |
+| A* Search (foodHeuristic) | 60 | 4137 |
+
+A utilização da heurística reduziu o número de nós expandidos de 16688 para 4137, representando uma redução de aproximadamente 75%, mantendo o custo ótimo da solução em 60 passos nos dois casos.
+
 
 ## Declaração do uso de IA
-> WIP
+Durante o desenvolvimento do projeto, foram utilizadas IAs generativas como ferramenta de apoio, principalmente como meio de tirar dúvidas conceituais, auxiliar no debug de códigos e polir a escrita do relatório. Todas as funções criadas foram desenvolvidas pelos membros do grupo.
