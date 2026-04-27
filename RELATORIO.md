@@ -6,7 +6,7 @@
 - Identificação: Nomes completos e números de matrícula dos membros do grupo
 > python pacman.py -l mediumMaze -p SearchAgent -a fn=depthFirstSearch
 - Modelagem de estado (Corners/Food) (Tarefa 5): Descreva como o estado foi representado. Que aspectos foram incluídos na representação? Como os cantos visitados são codificados?
-- Heurísticas (admissibilidade + impacto) (Tarefas 6-7): Descreva a heurística, forneça justificativa (mesmo que informar) de admissibilidade (por que é admissível?).
+- Heurísticas (admissibilidade + impacto) (Tarefas 6-7): Descreva a heurística, forneça justificativa (mesmo que informal) de admissibilidade (por que é admissível?).
 - Declaração do uso de IA. Declare se você utilizou sistemas baseados em IA generativa (como chatGPT, claude, copilot, etc) e como foi utilizado.
 - O formato é livre, mas deve conter as informações acima. A identificação deve ficar no início do documento e ser fácil de localizar. As demais informações podem ser organizadas em seções diferentes.
  -->
@@ -14,7 +14,7 @@
 # Relatório - Trabalho 1 - Inteligência Artificial
 **Membros do grupo:**
 - Adriel de Souza (00579100)
-- Arthur Bridi (00585225)
+- Arthur Chagas Bridi (00585225)
 - Rafael Stephanou (00590367)
 
 ## Comparação experimental (Tarefas 1-4):
@@ -33,7 +33,7 @@ python3 pacman.py -l bigMaze -p SearchAgent -a fn=aStarSearch,heuristic=manhatta
 ```
 
 ### Resultados - mediumMaze:
-| Algoritmo | Custo da Solução | Nós Expandido |
+| Algoritmo | Custo da Solução | Nós Expandidos |
 | - | - | - |
 | Depth First Search | 130 | 146 |
 | Breadth First Search | 68 | 269 |
@@ -41,7 +41,7 @@ python3 pacman.py -l bigMaze -p SearchAgent -a fn=aStarSearch,heuristic=manhatta
 | A* Search (Manhattan Heuristic) | 68 | 221 |
 
 ### Resultados - bigMaze:
-| Algoritmo | Custo da Solução | Nós Expandido |
+| Algoritmo | Custo da Solução | Nós Expandidos |
 | - | - | - |
 | Depth First Search | 210 | 390 |
 | Breadth First Search | 210 | 620 |
@@ -55,7 +55,7 @@ Em relação à otimalidade, os algoritmos BFS, UCS e A* garantiram o caminho ó
 
 Observou-se que o BFS e o UCS apresentaram resultados idênticos em termos de nós expandidos e custo final. Isso ocorre porque o problema do Pac-Man possui custos de transição uniformes (valor 1 para cada movimento), fazendo com que a busca de custo mínimo do UCS se comporte exatamente como a busca em largura do BFS.
 
-O impacto da heurística no algoritmo A* foi significativo para a eficiência da busca. Ao utilizar a distância de Manhattan, o A* conseguiu encontrar o caminho ótimo expandindo sensivelmente menos nós que o BFS e o UCS (por exemplo, 549 contra 620 no `bigMaze`). Isso demonstra como a incorporação de conhecimento sobre a meta permite direcionar a exploração e descartar caminhos menos promissores.
+O impacto da heurística no algoritmo A* foi significativo para a eficiência da busca. Ao utilizar a distância de Manhattan, o A* conseguiu encontrar o caminho ótimo expandindo uma quantidade sensivelmente menor de nós que o BFS e o UCS (por exemplo, 549 contra 620 no `bigMaze`). Isso demonstra como a incorporação de conhecimento sobre o objetivo permite direcionar a exploração e descartar caminhos menos promissores.
 
 Por fim, quanto à eficiência de expansão, o DFS expandiu a menor quantidade de nós em ambos os cenários, devido à sua natureza de explorar profundamente um ramo antes de retroceder. Contudo, essa rapidez de processamento sacrifica a qualidade da solução final, tornando o DFS inadequado quando o objetivo principal é minimizar o trajeto percorrido pelo Pac-Man.
 
@@ -69,12 +69,12 @@ A modelagem dos estados para o problema dos cantos foi definida como uma tupla c
 O estado inicial é composto pela posição de partida e a tupla `(False, False, False, False)`. O estado objetivo é alcançado quando todos os elementos da tupla de status são `True`, indicando que os quatro cantos foram visitados. Na função de sucessores, a cada movimento, verifica-se se a nova posição coincide com algum dos cantos; se sim, o booleano correspondente na tupla é atualizado para `True`.
 
 ### Food:
-A modelagem dos estados para o Food Problem é uma tupla contendo a posição atual do Pac-Man e uma matriz 2D de comida restante: ((x, y), foodGrid).
+A modelagem dos estados para o Food Problem é uma tupla contendo a posição atual do Pac-Man e uma matriz 2D de comida restante: `((x, y), foodGrid)`.
 
 - **Posição:** Uma tupla `(x, y)` com as coordenadas inteiras do Pac-Man.
-- **Grid de comida:** Um objeto Grid (matriz 2D) de valores booleanos onde True indica que ainda há comida naquela posição e False indica que já foi consumida.
+- **Grid de comida:** Um objeto Grid (matriz 2D) de valores booleanos onde `True` indica que ainda há comida naquela posição e `False` indica que já foi consumida.
 
-O estado inicial é composto pela posição de partida e o grid completo de comida (todos os pontos True). O estado objetivo é alcançado quando não há nenhum True restante no grid, ou seja, todas as comidas foram coletadas. Na função de sucessores, a cada movimento, verifica-se se a nova posição contém comida; se sim, o grid é copiado para o próximo estado e a posição correspondente é marcada como `False`.
+O estado inicial é composto pela posição de partida e o grid completo de comida (todos os pontos `True`). O estado objetivo é alcançado quando não há nenhum `True` restante no grid, ou seja, todas as comidas foram coletadas. Na função de sucessores, a cada movimento, verifica-se se a nova posição contém comida; se sim, o grid é copiado para o próximo estado e a posição correspondente é marcada como `False`.
 
 
 ## Heurísticas (admissibilidade + impacto) (Tarefas 6-7)
@@ -84,7 +84,7 @@ A heurística implementada para o problema dos cantos calcula a distância de Ma
 Essa heurística é admissível porque, para atingir o estado objetivo, o Pac-Man precisa obrigatoriamente visitar todos os cantos restantes. Como ele só pode se mover uma casa por vez (movimentos ortogonais), o custo real para chegar ao canto mais distante será sempre maior ou igual à distância de Manhattan até ele, mesmo ignorando as paredes do labirinto. Portanto, a heurística nunca superestima o custo real para alcançar o objetivo, garantindo a admissibilidade.
 
 ```bash
-# Comandos para analise do impacto da heurística:
+# Comandos para análise do impacto da heurística:
 
 # Sem heurística:
 python3 pacman.py -l mediumCorners -p SearchAgent -a fn=aStarSearch,prob=CornersProblem,heuristic=nullHeuristic -z 0.5
@@ -95,7 +95,7 @@ python3 pacman.py -l mediumCorners -p SearchAgent -a fn=aStarSearch,prob=Corners
 python3 pacman.py -l bigCorners -p SearchAgent -a fn=aStarSearch,prob=CornersProblem,heuristic=cornersHeuristic -z 0.5
 ```
 
-| Algoritmo | Labirinto | Custo da Solução | Nós Expandido |
+| Algoritmo | Labirinto | Custo da Solução | Nós Expandidos |
 | - | - | - | - | 
 | A* Search (Sem Heurística) | mediumCorners | 106 | 1699 |
 | A* Search (Corners Heuristic) | mediumCorners | 106 | 1136 |
@@ -111,7 +111,7 @@ A heurística implementada para o Food Problem calcula a distância real no labi
 A heurística é admissível porque o Pac-Man precisa obrigatoriamente visitar toda a comida, incluindo a mais distante. O custo real da solução nunca será menor que a distância até ela, independente do caminho tomado. Usar mazeDistance em vez de Manhattan torna a heurística mais precisa porque considera as paredes, reduzindo o número de nós expandidos pelo A*.
 
 ```bash
-# Comandos para analise do impacto da heurística:
+# Comandos para análise do impacto da heurística:
 
 # Sem heurística:
 python3 pacman.py -l trickySearch -p SearchAgent -a fn=aStarSearch,prob=FoodSearchProblem,heuristic=nullHeuristic -z 0.5
@@ -121,7 +121,7 @@ python3 pacman.py -l trickySearch -p SearchAgent -a fn=aStarSearch,prob=FoodSear
 ```
 
 
-| Algoritmo | Custo da Solução | Nós Expandido |
+| Algoritmo | Custo da Solução | Nós Expandidos |
 | - | - | - | 
 | A* Search (Sem Heurística) | 60 | 16688 |
 | A* Search (foodHeuristic) | 60 | 4137 |
