@@ -14,7 +14,7 @@
 # Relatório - Trabalho 1 - Inteligência Artificial
 **Membros do grupo:**
 - Adriel de Souza (00579100)
-- Arthur Bridi (xx)
+- Arthur Bridi (00585225)
 - Rafael Stephanou (00590367)
 
 ## Comparação experimental (Tarefas 1-4):
